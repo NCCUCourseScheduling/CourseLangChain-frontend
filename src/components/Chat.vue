@@ -15,13 +15,20 @@
           class="loading loading-dots loading-md"
         ></span>
         <VueMarkdown v-else :source="output" class="overflow-auto" />
+        <Teleport to="#StopGeneration">
+          <button class="btn" @click="close" v-if="canStop">
+            <Icon icon="mingcute:stop-line" class="w-4 h-4" />
+            Stop Generate
+          </button>
+        </Teleport>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, Ref, watch } from "vue";
+import { ref, watch } from "vue";
+import { Icon } from "@iconify/vue";
 import { useEventSource } from "@vueuse/core";
 import VueMarkdown from "vue-markdown-render";
 
@@ -34,6 +41,7 @@ const emits = defineEmits<{
 }>();
 
 const output = ref("");
+const canStop = ref(false);
 const outputError = ref(false);
 
 const { status, data, error, close } = useEventSource(
@@ -58,13 +66,18 @@ watch(error, (err) => {
 });
 
 watch(status, (value) => {
-  if (value === "CLOSED" && output.value.length > 0) {
+  if (value === "OPEN") {
+    canStop.value = true;
+  } else if (value === "CLOSED") {
     close();
-    emits("finish", {
-      input: props.input,
-      output: output.value,
-      time: new Date(),
-    });
+    canStop.value = false;
+    if (output.value.length > 0) {
+      emits("finish", {
+        input: props.input,
+        output: output.value,
+        time: new Date(),
+      });
+    }
   }
 });
 </script>

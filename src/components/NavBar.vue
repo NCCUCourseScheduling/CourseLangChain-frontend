@@ -1,8 +1,12 @@
 <template>
   <div class="navbar bg-base-200">
-    <div class="navbar-start"></div>
+    <div class="navbar-start">
+      <button class="btn btn-square" @click="emits('delete')">
+        <Icon icon="mingcute:delete-2-line" class="h-6 w-6" />
+      </button>
+    </div>
     <div class="navbar-center">
-      <a class="btn btn-ghost normal-case text-xl">CourseLangChain</a>
+      <span class="text-xl font-bold">CourseLangChain</span>
     </div>
     <div class="navbar-end">
       <Theme />
@@ -11,5 +15,10 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import Theme from "./Theme.vue";
+
+const emits = defineEmits<{
+  (e: "delete"): void
+}>()
 </script>

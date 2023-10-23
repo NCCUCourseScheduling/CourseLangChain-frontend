@@ -26,5 +26,9 @@ table {
 }
 
 tr {
-  @apply border-b border-b-base-100;
+  @apply border-b border-b-neutral-content;
+}
+
+td {
+  @apply py-1;
 }

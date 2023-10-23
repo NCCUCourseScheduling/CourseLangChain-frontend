@@ -1,0 +1,22 @@
+@tailwind base;
+
+@layer base {
+  :root {
+    --doc-height: 100%;
+  }
+
+  html,
+  body,
+  #app {
+    height: 100vh;
+    height: var(--doc-height);
+    overflow: hidden;
+  }
+
+  .h-real {
+    height: var(--doc-height);
+  }
+}
+
+@tailwind components;
+@tailwind utilities;

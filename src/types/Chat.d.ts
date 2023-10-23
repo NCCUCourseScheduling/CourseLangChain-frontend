@@ -1,5 +1,5 @@
 interface ChatMessage {
-  type: string;
-  content: string;
+  input: string
+  output: string;
   time: Date;
 }

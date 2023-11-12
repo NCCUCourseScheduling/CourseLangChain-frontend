@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="navbar-center">
-      <span class="text-xl font-bold">CourseLangChain</span>
+      <span class="text-xl font-bold">Course LangChain</span>
     </div>
     <div class="navbar-end">
       <Theme />

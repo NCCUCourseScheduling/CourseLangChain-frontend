@@ -32,12 +32,30 @@
         <button class="btn btn-square" type="submit" :disabled="chatting">
           <Icon icon="mingcute:send-fill" class="h-6 w-6" />
         </button>
+        <label for="my-upload">
+          <div
+            class="btn btn-square cursor-pointer"
+            :class="{ 'btn-disabled': chatting }"
+          >
+            <Icon icon="mingcute:mic-fill" class="h-6 w-6" />
+          </div>
+          <input
+            id="my-upload"
+            type="file"
+            accept="audio/*"
+            @change.prevent="handleUpload"
+            :disabled="chatting"
+            capture
+            hidden
+          />
+        </label>
       </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
 import { themeChange } from "theme-change";
 import { onMounted, ref, nextTick } from "vue";
 import Chat from "./components/Chat.vue";
@@ -62,6 +80,29 @@ const chat = (e?: Event) => {
       scrollTarget.value!.scrollIntoView({ behavior: "smooth" });
     }, 100);
   }
+};
+
+const handleUpload = (e: Event) => {
+  e.preventDefault();
+  const formData = new FormData();
+  const files = (e.target as HTMLInputElement).files;
+  if (!files) return;
+  formData.append("file", files[0]);
+  chatting.value = true;
+  axios
+    .post("/api/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => {
+      history.value.push(res.data.text);
+      if (scrollTarget.value) {
+        timer.value = setInterval(() => {
+          scrollTarget.value!.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    });
 };
 
 const finishChat = (message: ChatMessage) => {
